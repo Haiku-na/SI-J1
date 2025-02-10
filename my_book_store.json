@@ -1,0 +1,1 @@
+{"py/object": "models.BookStore", "_BookStore__books": {"py/set": [{"py/object": "models.Book", "_Book__id": 0, "_Book__title": "titre1", "_Book__author": "auteur1", "_Book__content": "contenu1"}]}}
