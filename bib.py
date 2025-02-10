@@ -1,45 +1,71 @@
 import json
-class Livre:
+# import jsonpickle
+class Book:
     #dunder
-    def __init__(self):
-        self.titre = 'title'
-        self.auteur = 'author'
-        self.contenu = 'content'
-        self.id = 'id'
+    def __init__(self, id, title, author, content):
+        self.__titre = title
+        self.__auteur = author
+        self.__contenu = content
+        self.__id = id #do not expose the id
         
     @property
     def title(self):
-        return self.title
+        return self.__title
+    @property
+    def author(self):
+        return self.__author
+    @property
+    def content(self):
+        return self.__content
+    @property
+    def id(self):
+        return self.__id
+        
     @title.setter
     def title(self, value):
-        if len(value) < 5:
-            print('Le titre doit contenir au moins 5 caractères')
-            self.title = value
+        self.title = value
+
+    @author.setter
+    def author(self, value):
+        self.author = value
+
+    @content.setter
+    def content(self, value):
+        self.content = value
+
+    @id.setter
+    def id(self, value):
+        self.id = value
+        
+
+class BookStore:
+    pass
+class Library:
+    pass
+class User:
+    pass
 
 
-class Utilisateur:
-    def __init__(self):
-        self.nom = 'nom'
-        self.id = 'id'
-        self.idLivre = 'idLivre'
+def list_books():
+    print(book_store.list())
 
+def add_book():
+    title = input("Title: ")
+    author = input("Author: ")
+    content = input("Content: ")
+    book = Book(0, title, author, content)
+    book_store.add(book)
 
-class Librairie:
-    def __init__(self):
-        self.id = 'id'
-        self.idLivre = 'idLivre'
-        self.idBib = 'idBib'
-
-class Bibliotheque:
-    def __init__(self):
-        self.id = 'id'
-        self.idLivre = 'idLivre'
-        self.idLibrairie = 'idLibrairie'
-        self.idUtilisateur = 'idUtilisateur'
+def del_book():
+    id = input("Id: ")
+    book_store.delete(id)
 
 if __name__ == '__main__': 
-
-    d = Livre()
-    print("Titre : ", d.titre)
-    d.titre = 't'
-    print("Titre : ",d.titre)
+    book_store = BookStore()
+    input_action = input("Action: ")
+    actions = {
+        "ls":list_books,
+        "new":add_book,
+        "del":del_book,
+        } 
+    print(actions[input_action]())
