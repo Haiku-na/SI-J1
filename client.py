@@ -1,10 +1,7 @@
-import jsonpickle
-from models import Book, BookStore, Library
+import socket
+import sys
 
-class User:
-    pass
-
-class App:
+class Client:
 
     def __init__(self):
         self.__actions = {
@@ -15,43 +12,33 @@ class App:
         'save': self.save_to_disk,
         'exit': self.should_continue
         }
-        self.__book_store = BookStore()
-        self.__library = Library()
-        self.__next_id = 0
+
 
     def should_continue(self):
         return False
 
     def list_books(self):
-        self.__book_store.list()
+        #TODO: List from server
         return True
 
     def new_book(self):
         title = input('title: ')
         author = input('author: ')
         content = input('content: ')
-        book = Book(self.__next_id, author, title, content)
-        self.__book_store.add(book)
-        self.__next_id += 1
+        #TODO: send to the server
         return True
 
     def delete_book(self):
         book_id = int(input('Book id: '))
-        self.__book_store.delete(book_id)
+
+        #TODO: send to the server
         return True
 
     def get_book(self):
         book_id = input('Book id: ')
-        book = self.__book_store.get(book_id)
+        book = None
+        #TODO: get book from the server
         print(book)
-        return True
-
-    def save_to_disk(self):
-        # unpacking
-        for filename, obj in [('my_lib.json', self.__library), ('my_book_store.json', self.__book_store)]:
-            with open(filename, 'w') as lib_file:
-                raw_json = jsonpickle.encode(obj)
-                lib_file.write(raw_json)
         return True
 
     def run(self):
@@ -63,7 +50,26 @@ class App:
             else:
                 print(f'Action not supported {action}')
 
+
+
+
+HOST, PORT = "localhost", 9999
+data = " ".join(sys.argv[1:])
+
+# Create a socket (SOCK_STREAM means a TCP socket)
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    # Connect to server and send data
+    sock.connect((HOST, PORT))
+    sock.sendall(bytes(data, "utf-8"))
+    sock.sendall(b"\n")
+
+    # Receive data from the server and shut down
+    received = str(sock.recv(1024), "utf-8")
+
+print("Sent:    ", data)
+print("Received:", received)
+
+
 if __name__ == '__main__':
-    app = App()
-    app.run()
-    
+    client = Client()
+    client.run()
